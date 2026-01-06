@@ -61,7 +61,7 @@ class NodeAutoregressiveTester(BaseTester):
                 if self.include_physics_loss:
                     # Requires normalized prediction for physics-informed loss
                     prev_edge_pred = physics_utils.get_curr_flow_from_edge_features(edge_attr, self.dataset.previous_timesteps)
-                    validation_stats.update_physics_informed_stats_for_timestep(pred, prev_node_pred, prev_edge_pred, graph, TEST_LOCAL_MASS_LOSS_NODES)
+                    validation_stats.compute_physics_informed_stats_for_timestep(pred, prev_node_pred, prev_edge_pred, graph, TEST_LOCAL_MASS_LOSS_NODES)
 
                 sliding_window = torch.concat((sliding_window[:, 1:], pred), dim=1)
 
@@ -78,8 +78,9 @@ class NodeAutoregressiveTester(BaseTester):
                 pred = pred[self.non_boundary_nodes_mask]
                 label = label[self.non_boundary_nodes_mask]
 
-                validation_stats.update_stats_for_timestep(pred.cpu(),
-                                                           label.cpu(),
-                                                           water_threshold=self.threshold_per_cell,
-                                                           timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
+                validation_stats.add_pred_for_timestep(pred=pred.cpu(),
+                                                       target=label.cpu(),
+                                                       timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
+
         validation_stats.end_validate()
+        validation_stats.compute_overall_stats(water_threshold=self.threshold_per_cell)

@@ -56,7 +56,7 @@ class NodeRegressionTester(BaseTester):
                 if self.include_physics_loss:
                     # Requires normalized prediction for physics-informed loss
                     prev_node_pred, prev_edge_pred = physics_utils.get_physics_info_node_edge(x, edge_attr, self.dataset.previous_timesteps, graph)
-                    validation_stats.update_physics_informed_stats_for_timestep(pred, prev_node_pred, prev_edge_pred, graph, TEST_LOCAL_MASS_LOSS_NODES)
+                    validation_stats.compute_physics_informed_stats_for_timestep(pred, prev_node_pred, prev_edge_pred, graph, TEST_LOCAL_MASS_LOSS_NODES)
 
                 label = x[:, [self.end_node_target_idx-1]] + graph.y
                 if self.dataset.is_normalized:
@@ -71,8 +71,9 @@ class NodeRegressionTester(BaseTester):
                 pred = pred[self.non_boundary_nodes_mask]
                 label = label[self.non_boundary_nodes_mask]
 
-                validation_stats.update_stats_for_timestep(pred.cpu(),
-                                                           label.cpu(),
-                                                           water_threshold=self.threshold_per_cell,
-                                                           timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
+                validation_stats.add_pred_for_timestep(pred=pred.cpu(),
+                                                       target=label.cpu(),
+                                                       timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
+
         validation_stats.end_validate()
+        validation_stats.compute_overall_stats(water_threshold=self.threshold_per_cell)

@@ -5,11 +5,23 @@ from data.hecras_data_retrieval import get_wl_vol_interp_points_for_cell, get_ce
 from torch import Tensor
 from torch.nn.functional import mse_loss, l1_loss
 
-def RMSE(pred: Tensor, target: Tensor) -> Tensor:
-    return torch.sqrt(mse_loss(pred, target))
+EPS = 1e-7 # Prevent division by zero
 
-def MAE(pred: Tensor, target: Tensor) -> Tensor:
-    return l1_loss(pred, target)
+def RMSE(pred: Tensor, target: Tensor, mask: Tensor = None) -> Tensor:
+    if mask is None:
+        return torch.sqrt(mse_loss(pred, target))
+
+    mse = mse_loss(pred, target, reduction='none')
+    mse = (mse * mask).sum() / (mask.sum() + EPS)
+    return torch.sqrt(mse)
+
+def MAE(pred: Tensor, target: Tensor, mask: Tensor = None) -> Tensor:
+    if mask is None:
+        return l1_loss(pred, target, reduction='mean')
+
+    mae = l1_loss(pred, target, reduction='none')
+    mae = (mae * mask).sum() / (mask.sum() + EPS)
+    return mae
 
 def NSE(pred: Tensor, target: Tensor) -> Tensor:
     '''Nash Sutcliffe Efficiency'''

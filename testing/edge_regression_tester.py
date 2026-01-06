@@ -52,5 +52,9 @@ class EdgeRegressionTester(BaseTester):
                     edge_pred = self.dataset.normalizer.denormalize(self.dataset.EDGE_TARGET_FEATURE, edge_pred)
                     label_edge = self.dataset.normalizer.denormalize(self.dataset.EDGE_TARGET_FEATURE, label_edge)
 
-                validation_stats.update_edge_stats_for_timestep(edge_pred.cpu(), label_edge.cpu())
+                validation_stats.add_pred_for_timestep(edge_pred=edge_pred.cpu(),
+                                                       edge_target=label_edge.cpu(),
+                                                       timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
+
         validation_stats.end_validate()
+        validation_stats.compute_overall_stats()

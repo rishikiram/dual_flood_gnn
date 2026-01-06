@@ -75,7 +75,7 @@ class DualAutoregressiveTester(BaseTester):
 
                 if self.include_physics_loss:
                     # Requires normalized prediction for physics-informed loss
-                    validation_stats.update_physics_informed_stats_for_timestep(pred, prev_node_pred, prev_edge_pred, graph, TEST_LOCAL_MASS_LOSS_NODES)
+                    validation_stats.compute_physics_informed_stats_for_timestep(pred, prev_node_pred, prev_edge_pred, graph, TEST_LOCAL_MASS_LOSS_NODES)
 
                 sliding_window = torch.concat((sliding_window[:, 1:], pred), dim=1)
                 edge_sliding_window = torch.concat((edge_sliding_window[:, 1:], edge_pred), dim=1)
@@ -93,18 +93,16 @@ class DualAutoregressiveTester(BaseTester):
                 pred = pred[self.non_boundary_nodes_mask]
                 label = label[self.non_boundary_nodes_mask]
 
-                validation_stats.update_stats_for_timestep(pred.cpu(),
-                                                           label.cpu(),
-                                                           water_threshold=self.threshold_per_cell,
-                                                           timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
-
                 label_edge = graph.edge_attr[:, [self.end_edge_target_idx-1]] + graph.y_edge
                 if self.dataset.is_normalized:
                     edge_pred = self.dataset.normalizer.denormalize(self.dataset.EDGE_TARGET_FEATURE, edge_pred)
                     label_edge = self.dataset.normalizer.denormalize(self.dataset.EDGE_TARGET_FEATURE, label_edge)
 
-                validation_stats.update_edge_stats_for_timestep(edge_pred.cpu(), label_edge.cpu())
+                validation_stats.add_pred_for_timestep(pred.cpu(), label.cpu(), edge_pred.cpu(), label_edge.cpu(),
+                                                       timestamp=graph.timestep if hasattr(graph, 'timestep') else None)
+
         validation_stats.end_validate()
+        validation_stats.compute_overall_stats(water_threshold=self.threshold_per_cell)
 
     def get_avg_edge_rmse(self) -> float:
         edge_rmses = [stat.get_avg_edge_rmse() for stat in self.events_validation_stats]
