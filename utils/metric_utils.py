@@ -23,11 +23,17 @@ def MAE(pred: Tensor, target: Tensor, mask: Tensor = None) -> Tensor:
     mae = (mae * mask).sum() / (mask.sum() + EPS)
     return mae
 
-def NSE(pred: Tensor, target: Tensor) -> Tensor:
+def NSE(pred: Tensor, target: Tensor, mask: Tensor = None) -> Tensor:
     '''Nash Sutcliffe Efficiency'''
-    model_sse = torch.sum((target - pred)**2)
-    mean_model_sse = torch.sum((target - target.mean())**2)
-    return 1 - (model_sse / mean_model_sse)
+    if mask is None:
+        model_sse = torch.sum((target - pred)**2)
+        mean_model_sse = torch.sum((target - target.mean())**2)
+        return 1 - (model_sse / mean_model_sse)
+
+    target_mean = (target * mask).sum() / (mask.sum() + EPS)
+    model_sse = torch.sum((target - pred)**2 * mask)
+    mean_model_sse = torch.sum((target - target_mean)**2 * mask)
+    return 1 - (model_sse / (mean_model_sse + EPS))
 
 def CSI(binary_pred: Tensor, binary_target: Tensor):
     TP = (binary_pred & binary_target).sum() #true positive

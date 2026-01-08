@@ -39,6 +39,7 @@ class ValidationStats:
         # Flooded cell stats
         self.rmse_flooded_list = []
         self.mae_flooded_list = []
+        self.nse_flooded_list = []
 
         # ======== Water flow stats ========
         self.edge_pred_list = []
@@ -114,8 +115,8 @@ class ValidationStats:
             self.timestamps.append(timestamp)
 
     def compute_overall_stats(self, water_threshold: Union[float, Tensor] = 0.05):
-        def get_metric_list(metric_func: Callable, p: Tensor, t: Tensor, mask: Tensor = None, in_dims: int = 0):
-            v_metric_func = torch.vmap(metric_func, in_dims=in_dims)
+        def get_metric_list(metric_func: Callable, p: Tensor, t: Tensor, mask: Tensor = None):
+            v_metric_func = torch.vmap(metric_func)
             if mask is not None:
                 out = v_metric_func(p, t, mask).tolist()
                 return out
@@ -129,6 +130,7 @@ class ValidationStats:
             # Per timestep node stats
             self.rmse_list = get_metric_list(RMSE, t_pred, t_target)
             self.mae_list = get_metric_list(MAE, t_pred, t_target)
+            self.nse_list = get_metric_list(NSE, t_pred, t_target)
 
             binary_pred = t_pred > water_threshold
             binary_target = t_target > water_threshold
@@ -138,9 +140,7 @@ class ValidationStats:
             flooded_mask = binary_pred | binary_target
             self.rmse_flooded_list = get_metric_list(RMSE, t_pred, t_target, mask=flooded_mask)
             self.mae_flooded_list = get_metric_list(MAE, t_pred, t_target, mask=flooded_mask)
-
-            # Per node stats
-            self.nse_list = get_metric_list(NSE, t_pred, t_target, in_dims=1)
+            self.nse_flooded_list = get_metric_list(NSE, t_pred, t_target, mask=flooded_mask)
 
         if len(self.edge_pred_list) > 0 and len(self.edge_target_list) > 0:
             t_edge_pred = torch.stack(self.edge_pred_list, dim=0)
@@ -149,9 +149,7 @@ class ValidationStats:
             # Per timestep edge stats
             self.edge_rmse_list = get_metric_list(RMSE, t_edge_pred, t_edge_target)
             self.edge_mae_list = get_metric_list(MAE, t_edge_pred, t_edge_target)
-
-            # Per edge stats
-            self.edge_nse_list = get_metric_list(NSE, t_edge_pred, t_edge_target, in_dims=1)
+            self.edge_nse_list = get_metric_list(NSE, t_edge_pred, t_edge_target)
 
     def compute_physics_informed_stats_for_timestep(self,
                                                     pred: Tensor,
@@ -185,9 +183,10 @@ class ValidationStats:
         self.local_mass_loss_list.append(local_mass_loss.cpu().item())
 
     def print_stats_summary(self):
-        def print_stat_avg(name: str, values: List[float]):
+        def print_stat_avg(name: str, values: List[float], newline: bool = False):
             if len(values) > 0:
-                self.log(f'Average {name}: {np.mean(values):.4e}')
+                newline_str = '\n' if newline else ''
+                self.log(f'{newline_str}Average {name}: {np.mean(values):.4e}')
 
         print_stat_avg('RMSE', self.rmse_list)
         print_stat_avg('MAE', self.mae_list)
@@ -195,8 +194,9 @@ class ValidationStats:
         print_stat_avg('CSI', self.csi_list)
         print_stat_avg('RMSE (flooded)', self.rmse_flooded_list)
         print_stat_avg('MAE (flooded)', self.mae_flooded_list)
+        print_stat_avg('NSE (flooded)', self.nse_flooded_list)
 
-        print_stat_avg('Edge RMSE', self.edge_rmse_list)
+        print_stat_avg('Edge RMSE', self.edge_rmse_list, newline=True)
         print_stat_avg('Edge MAE', self.edge_mae_list)
         print_stat_avg('Edge NSE', self.edge_nse_list)
 
@@ -228,6 +228,7 @@ class ValidationStats:
             'csi': np.array(self.csi_list),
             'rmse_flooded': np.array(self.rmse_flooded_list),
             'mae_flooded': np.array(self.mae_flooded_list),
+            'nse_flooded': np.array(self.nse_flooded_list),
             'edge_rmse': np.array(self.edge_rmse_list),
             'edge_mae': np.array(self.edge_mae_list),
             'edge_nse': np.array(self.edge_nse_list),
