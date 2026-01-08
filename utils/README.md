@@ -14,6 +14,7 @@ Contains various utility classes and objects.
 | metric_utils.py | N/A | Contains utility functions for computing metrics. |
 | model_utils.py | N/A | Contains utility functions for building model architectures. |
 | physics_utils.py | N/A | Contains utility functions that retrieve values for physics-informed loss. |
+| plot_utils.py | N/A | Contains utility functions for plotting training and testing results. |
 | train_utils.py | N/A | Contain utility functions for training. |
 | training_stats.py | TrainingStats | Class used to keep track of the statistics when training the model. |
 | validation_stats.py | ValidationStats | Class used to keep track of the statistics when validating / testing the model. |

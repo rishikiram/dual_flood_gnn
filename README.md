@@ -1,16 +1,18 @@
-# Physics-informed Graph Neural Networks for Operational Flood Modelling
+# DUALFloodGNN
+
+This repository contains the code for "DUALFloodGNN: Physics-informed Graph Neural Networks for Operational Flood Modeling." DUALFloodGNN is a physics-informed flood GNN architecture comprised of three main components: (1) a model that performs shared message passing to predict both node and edge features, (2) a physics-informed loss function that enforces global and local mass conservation between consecutive predictions, and (3) an autoregressive training strategy utilizing dynamic curriculum learning.
 
 ## Setup
 
 ### Environment
-1. Create a virtual environment (with either conda or venv).
+1. Create a virtual environment (with either conda or venv). This repository has been tested on Python 3.12.3.
 ```bash
 python -m venv venv
 
 source venv/bin/activate # Linux
 venv/Scripts/Activate.ps1 # Windows
 ```
-2. Install PyTorch based on your CUDA version. Currently, the repository uses PyTorch version 2.5.1. Replace `${CUDA}` with the apporpriate CUDA version for your machine (ex. `${CUDA}` -> 124 for CUDA 12.4).
+2. Install PyTorch based on your CUDA version. This repository has been tested on PyTorch version 2.5.1. Replace `${CUDA}` with the apporpriate CUDA version for your machine (ex. `${CUDA}` -> 124 for CUDA 12.4).
 ```bash
 pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu${CUDA}
 ```
@@ -53,7 +55,7 @@ Below are the list of entry points for the application that you may run.
 |---|---|---|
 | `train.py` | Train the model with the parameters specified in the config file. | `--config`, `--model`, `--with_test` `--seed` `--device` `--debug` |
 | `test.py` | Perform inference using the specified model checkpoint with test data. | `--config`, `--model`, `--model_path`, `--seed`, `--device`, `--debug` |
-| `hp_search.py` | Perform a Bayesian hyperparameter search with the specified hyperparameters and events. | `--config`, `--hparam_config`, `--model`, `--seed`, `--device` |
+| `hp_search.py` | Perform a Bayesian hyperparameter search with the specified hyperparameters and events. (Warning: not fully tested.) | `--config`, `--hparam_config`, `--model`, `--seed`, `--device` |
 | `eda.ipynb` | Jupyter notebook that gives an overview and analysis of the data. | N/A |
 | `view_results.ipynb` | Jupyter notebook where you may view the results of model training and testing. | N/A |
 
@@ -74,3 +76,18 @@ The code is categorized in different folder based on their specific purpose. Bel
 | [testing](https://github.com/acostacos/flood_pi_gnn/tree/master/testing) | Contains Tester classes used to test the model. |
 | [training](https://github.com/acostacos/flood_pi_gnn/tree/master/training) | Contains Trainer classes used to train the model. |
 | [utils](https://github.com/acostacos/flood_pi_gnn/tree/master/utils) | Contains various utility classes and objects. |
+
+## Citation
+
+If you use this code for your research, please cite [our paper](https://arxiv.org/abs/2512.23964) (preprint):
+```
+@misc{acosta2025dualfloodgnn,
+      title={Physics-informed Graph Neural Networks for Operational Flood Modeling}, 
+      author={Carlo Malapad Acosta and Herath Mudiyanselage Viraj Vidura Herath and Jia Yu Lim and Abhishek Saha and Sanka Rasnayaka and Lucy Marshall},
+      year={2025},
+      eprint={2512.23964},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2512.23964}, 
+}
+```

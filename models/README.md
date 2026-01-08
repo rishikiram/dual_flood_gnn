@@ -13,7 +13,10 @@ Contains different GNN model architectures.
 | node_edge_gnn_transformer.py | NodeEdgeGNNTransformer | Graph transformer with node and edge prediction model (prototype). |
 | node_gnn.py | NodeGNN | Node only prediction model based on DUALFloodGNN. |
 | edge_gnn.py | EdgeGNN | Edge only prediction model based on DUALFloodGNN. |
-| gcn.py | GCN | [GCN](https://arxiv.org/abs/1609.02907) with encoder and decoder. |
-| edge_gcn.py | GCN (for edge) | GCN model modified for edge prediction. |
-| gat.py | GAT | [GAT](https://arxiv.org/abs/1710.10903v3) with encoder and decoder. |
-| edge_gat.py | GAT (for edge) | GAT model modified for edge prediction. |
+| base_node_model.py | BaseNodeModel | Base class for all models that only perform node prediction. |
+| base_edge_model.py | BaseEdgeModel | Base class for all models that only perform edge prediction. |
+| gcn.py | GCN, EdgeGCN | Graph Convolution Network (See [here](https://arxiv.org/abs/1609.02907)) |
+| gat.py | GAT, EdgeGAT | Graph Attention Network (See [here](https://arxiv.org/abs/1710.10903v3)) |
+| gin.py | GIN, EdgeGIN | Graph Isomorphism Network (See [here](https://arxiv.org/abs/1810.00826)) |
+| gine.py | GINE, EdgeGINE | Graph Isomorphism Network with Edges (See [here](https://arxiv.org/abs/1905.12265)) |
+| graphsage.py | GraphSAGE, EdgeGraphSAGE | Graph SAmple and aggreGatE (See [here](https://arxiv.org/abs/1706.02216)) |

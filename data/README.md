@@ -13,6 +13,7 @@ Contains the raw data and Dataset classes for accessing this data.
 | in_memory_autoregressive_flood_dataset.py | InMemoryAutoregressiveFloodDataset | Similar to AutoregressiveFloodDataset but loads all data points in memory for faster access. |
 | hecras_data_retrieval.py | N/A | Functions used to retrieve data from HEC-RAS simulation files (.hdf). |
 | shp_data_retrieval.py | N/A | Functions used to retrieve data from shape files (.shp). |
+| dem_data_retrieval.py | N/A | Functions used to retrieve data from DEM files (.tif). |
 | boundary_condition.py | BoundaryCondition | Class used in FloodEventDataset. Handles creation of boundary conditions/cells and removal of ghost cells. |
 | dataset_normalizer.py | DatasetNormalizer | Class used in FloodEventDataset. Handles normalization of dataset features. |
 
