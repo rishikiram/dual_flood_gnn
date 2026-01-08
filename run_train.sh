@@ -21,7 +21,13 @@ srun python train.py --config 'configs/no_physics_config.yaml' --model 'DUALFloo
 # Node Prediction
 srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'GAT'
 srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'GCN'
+srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'GIN'
+srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'GINE'
+srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'GraphSAGE'
 
 # Edge Prediction
 srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGAT'
 srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGCN'
+srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGIN'
+srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGINE'
+srun python train.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGraphSAGE'

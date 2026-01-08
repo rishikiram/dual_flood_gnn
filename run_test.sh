@@ -20,7 +20,13 @@ srun python test.py --config 'configs/no_physics_config.yaml' --model 'DUALFlood
 # Node Prediction
 srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'GAT' --model_path ''
 srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'GCN' --model_path ''
+srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'GIN' --model_path ''
+srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'GINE' --model_path ''
+srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'GraphSAGE' --model_path ''
 
 # Edge Prediction
 srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGAT' --model_path ''
 srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGCN' --model_path ''
+srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGIN' --model_path ''
+srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGINE' --model_path ''
+srun python test.py --config 'configs/standard_gnn_config.yaml' --model 'EdgeGraphSAGE' --model_path ''
