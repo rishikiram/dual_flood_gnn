@@ -1,9 +1,9 @@
 dataset_parameters:
   storage_mode: 'memory'                                     # 'memory' or 'disk'. Where to load the dataset
   root_dir: '/home/rishi/urbanFlood'                                  # Path to root directory for the dataset files
-  nodes_shp_file: '/home/rishi/urbanFlooding/Models/Model_1/shapefiles/Nodes_2D.prj'       # Filename of shapefile containing node information
-  edges_shp_file: '/home/rishi/urbanFlooding/Models/Model_1/shapefiles/Links_2D.prj'            # Filename of shapefile containing edge information
-  dem_file: 'Geometry/DEM.tif'                               # Filename of DEM file
+  nodes_shp_file: '' #'/home/rishi/urbanFlooding/Models/Model_1/shapefiles/Nodes_2D.prj'       # Filename of shapefile containing node information
+  edges_shp_file: ''            # Filename of shapefile containing edge information
+  dem_file: ''                               # Filename of DEM file
   features_stats_file: 'features_stats.yaml'                 # Filename for the yaml file containing feature statistics (mean, std, min, max). Generated when initializing the dataset
 
   previous_timesteps: 1                                      # Number of previous timesteps to consider for input features
@@ -18,10 +18,10 @@ dataset_parameters:
   #   default: 129600
   time_from_peak: null                                       # Time after peak flow to consider in data in seconds. Used to trim the end of the flood event. Set to null to include the entire event
   inflow_boundary_nodes:                                     # List of inflow boundary node IDs for boundary conditions
-  - 1248
+  #- 1248
   outflow_boundary_nodes:                                    # List of outflow boundary node IDs for boundary conditions
-  - 1253
-  - 1129
+  #- 1253
+  #- 1129
 
   training:
     dataset_summary_file: 'train.csv'                        # Filename of csv file containing the list of training flood events (Run IDs and HEC-RAS file paths)
