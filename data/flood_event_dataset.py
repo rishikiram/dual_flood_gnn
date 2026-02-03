@@ -369,6 +369,7 @@ class FloodEventDataset(Dataset):
         return edge_index
 
     def _get_static_node_features(self) -> ndarray:
+        # TODO add overide if csv file exists
         def _get_dem_based_feature(node_shp_path: str,
                                    dem_path: str,
                                    feature_func: Callable,
